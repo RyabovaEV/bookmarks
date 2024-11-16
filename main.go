@@ -4,11 +4,10 @@ import (
 	"fmt"
 )
 
+type bokmarkMap = map[string]string
+
 func main() {
-	bookmarks := map[string]string{
-		"main":  "Главная",
-		"about": "О нас",
-	}
+	bookmarks := bokmarkMap{}
 	actions := map[int]string{
 		1: "output",
 		2: "append",
@@ -23,11 +22,9 @@ func main() {
 		case 1:
 			printBookmarks(bookmarks)
 		case 2:
-			key, value := appendBookmarks()
-			bookmarks[key] = value
+			bookmarks = appendBookmarks(bookmarks)
 		case 3:
-			deleteKey := deleteBookmarks(bookmarks)
-			delete(bookmarks, deleteKey)
+			bookmarks = deleteBookmarks(bookmarks)
 		case 4:
 			fmt.Println("Выход из программы...")
 			return
@@ -54,37 +51,50 @@ func actionSelect(actions map[int]string) int {
 	}
 }
 
-func printBookmarks(bookmarks map[string]string) {
-	fmt.Println("Список закладок: ")
-	for key, value := range bookmarks {
-		fmt.Println(key, value)
+func printBookmarks(bookmarks bokmarkMap) {
+	if len(bookmarks) == 0 {
+		fmt.Println("Пока нет закладок")
+	} else {
+		fmt.Println("Список закладок: ")
+		for key, value := range bookmarks {
+			fmt.Println(key, value)
+		}
 	}
 }
 
-func appendBookmarks() (key string, value string) {
+func appendBookmarks(bookmarks bokmarkMap) bokmarkMap {
+	var key string
+	var value string
 	fmt.Println("Введите ключ: ")
 	fmt.Scan(&key)
 	fmt.Println("Введите значение: ")
 	fmt.Scan(&value)
-	return key, value
+
+	bookmarks[key] = value
+	return bookmarks
 }
 
-func deleteBookmarks(bookmarks map[string]string) string {
-	var deleteKey string
-	fmt.Println("Какой элемент хотите удалть?")
-	for key, value := range bookmarks {
-		fmt.Println(key, value)
-	}
-	for {
-		fmt.Print("Введите ключ: ")
-		fmt.Scan(&deleteKey)
-		for key := range bookmarks {
-			if key == deleteKey {
-				return deleteKey
-				//break
-			}
+func deleteBookmarks(bookmarks bokmarkMap) bokmarkMap {
+	if len(bookmarks) == 0 {
+		fmt.Println("Пока нет закладок")
+		return bookmarks
+	} else {
+		var deleteKey string
+		fmt.Println("Какой элемент хотите удалть?")
+		for key, value := range bookmarks {
+			fmt.Println(key, value)
 		}
-		fmt.Println("Повторите ввод, введен не существующий ключ!")
-		continue
+		for {
+			fmt.Print("Введите ключ: ")
+			fmt.Scan(&deleteKey)
+			for key := range bookmarks {
+				if key == deleteKey {
+					delete(bookmarks, deleteKey)
+					fmt.Println("Элемент успешно удалён.")
+					return bookmarks
+				}
+			}
+			fmt.Println("Повторите ввод, введен не существующий ключ!")
+		}
 	}
 }
