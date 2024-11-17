@@ -7,6 +7,7 @@ import (
 type bokmarkMap = map[string]string
 
 func main() {
+
 	bookmarks := bokmarkMap{}
 	actions := map[int]string{
 		1: "output",
@@ -22,9 +23,9 @@ func main() {
 		case 1:
 			printBookmarks(bookmarks)
 		case 2:
-			bookmarks = appendBookmarks(bookmarks)
+			appendBookmarks(bookmarks)
 		case 3:
-			bookmarks = deleteBookmarks(bookmarks)
+			deleteBookmarks(bookmarks)
 		case 4:
 			fmt.Println("Выход из программы...")
 			return
@@ -62,7 +63,7 @@ func printBookmarks(bookmarks bokmarkMap) {
 	}
 }
 
-func appendBookmarks(bookmarks bokmarkMap) bokmarkMap {
+func appendBookmarks(bookmarks bokmarkMap) {
 	var key string
 	var value string
 	fmt.Println("Введите ключ: ")
@@ -71,19 +72,20 @@ func appendBookmarks(bookmarks bokmarkMap) bokmarkMap {
 	fmt.Scan(&value)
 
 	bookmarks[key] = value
-	return bookmarks
+	//return bookmarks
 }
 
-func deleteBookmarks(bookmarks bokmarkMap) bokmarkMap {
+func deleteBookmarks(bookmarks bokmarkMap) {
 	if len(bookmarks) == 0 {
 		fmt.Println("Пока нет закладок")
-		return bookmarks
+		//return bookmarks
 	} else {
 		var deleteKey string
 		fmt.Println("Какой элемент хотите удалть?")
 		for key, value := range bookmarks {
 			fmt.Println(key, value)
 		}
+	MainFor:
 		for {
 			fmt.Print("Введите ключ: ")
 			fmt.Scan(&deleteKey)
@@ -91,7 +93,7 @@ func deleteBookmarks(bookmarks bokmarkMap) bokmarkMap {
 				if key == deleteKey {
 					delete(bookmarks, deleteKey)
 					fmt.Println("Элемент успешно удалён.")
-					return bookmarks
+					break MainFor //return bookmarks
 				}
 			}
 			fmt.Println("Повторите ввод, введен не существующий ключ!")
